@@ -23,6 +23,7 @@ for name in ["small", "medium", "fine"]:
     case = Path("data") / name
     for filename in [
         "cpu.json",
+        "cpu-additional.json",
         "gpu.json",
         "fields.json",
         "cpu_controls.json",

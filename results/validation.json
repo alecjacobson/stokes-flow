@@ -1,0 +1,7 @@
+{
+  "numerical_regression": {"command": "PYTHONPATH=. OPENBLAS_NUM_THREADS=1 .venv/bin/python -m pytest -q", "passed": 2, "failed": 0},
+  "cases": ["small", "medium", "fine"],
+  "checks": ["independent free-velocity and divergence matrices", "Dirichlet lifting", "CPU/GPU velocity and pressure coefficients", "each timed graph replay", "changed inlet and viscosity", "flow reversal", "geometry dilation", "independent FEM L2 errors and flux integration", "FSAI refit status and SPD CG residual"],
+  "precision": "float32 matrices/factors; float64 geometric Jacobians and residual accumulation",
+  "hosted_ci": "not configured: publishing token lacks workflow scope"
+}

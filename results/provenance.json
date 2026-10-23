@@ -1,0 +1,30 @@
+{
+  "source_commit": "aa7b106bb8c011c863c9b0ddf1a174c4df201360",
+  "hardware": {
+    "cpu": "AMD EPYC 9B45; 4-core cgroup quota; 1 MPI rank; 4 OMP/BLAS threads",
+    "gpu": "RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb"
+  },
+  "cases": {
+    "small": {
+      "data/small.msh": "83549a129480b9cc985b3af6ae1298b1be2c75f47c616462704aff5c11aad79d",
+      "data/small/mesh.npz": "05325b50655ed49623a49a9ac96cc8fc30da465864ccbfb905d74904382e7627",
+      "data/small/A.npz": "0b589a8ba015cc3e4533f175e0f4ea22d903fc880b01a9e1955f40abb600d127",
+      "data/small/b.npy": "5715db446cf2ee121738a930c5684481a2ec970f481ef8506335d7ead1f93c74",
+      "data/small/x.npy": "2d586c664a617347de289822197e7ad0ab80c731ee28f7543aebd147f85f0dce"
+    },
+    "medium": {
+      "data/medium.msh": "a910d5b343271cf44c022ffadd5351f10ac80f9839cb0ffd84a31bbdba45cf63",
+      "data/medium/mesh.npz": "2fb16d326fcaaac85d4648581b707af27d579956205e18b993339aab08e356a2",
+      "data/medium/A.npz": "67e179b70c0453233dc04ff645ecfd7286d2c65456a4fe2e35fc1b90ab839940",
+      "data/medium/b.npy": "d4d850fb876aa23f463d1a31168ba73ad13cfc1e47f523e473f32298241d22fd",
+      "data/medium/x.npy": "af874a3b70a634a584fe6cf83ce864a47cf9adf341670f0ed016e47dfdd6bf1a"
+    },
+    "fine": {
+      "data/fine.msh": "3a3df6c6d80eea0c53ff84a02662eb8afdb451265ac5f405dca8ddc99e0c761c",
+      "data/fine/mesh.npz": "ab760400bddc0de508e50f055b62d76f6cab0f78e6e640a8bdae00ff33de9223",
+      "data/fine/A.npz": "a48f8bfb94b2bcd2463ae3eb9851ab14b7c939be426e115dae2357460779ce0a",
+      "data/fine/b.npy": "c18028b402195fc4ad6f29921f2d7dbbfbe761478e19aaadd9dbadec7c6c3aee",
+      "data/fine/x.npy": "8acf59dd7287e501366cadf4386e3b4de32db79368c3f6f1d9f8a59e6c3d4ee2"
+    }
+  }
+}

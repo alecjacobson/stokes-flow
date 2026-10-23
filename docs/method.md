@@ -47,6 +47,8 @@ CPU and GPU reports retain every repetition. The primary comparison is repeated 
 
 GPU times synchronize before and after replay and include all correction solves. CPU factor timing explicitly calls `PCSetUp`, since `KSPSetUp` can defer factorization to `KSPSolve`. Initialization, first factorization, reused-factor solves and warm full-pipeline times are separate. JIT and symbolic analysis are excluded from warm timing and reported as setup. Cold totals are sums of the measured setup/first-operation components, not process-start or mesh-generation measurements.
 
+For the published flagship CPU baseline, two three-repeat batches are retained. The faster batch is used for the headline ratio, so later shared-VM contention does not inflate the claimed GPU speedup. GPU times use the median of seven final replays, each checked against the reference after timing.
+
 The supplied DOLFINx vector assembly stores explicit structural zeros that the Warp scalar CSR omits. An additional CPU MUMPS control prunes numerical zeros. A SciPy/SuperLU float32 control measures a CPU single-precision solve of the independently assembled reference matrix. That control is not presented as an optimized CPU solver comparison. Results are specific to these direct solvers and hardware allocation; no comparison to a tuned CPU AMG Stokes solver is claimed.
 
 FSAI is tested with graph-captured CG on the SPD scalar velocity block. That experiment assesses a building block for a possible iterative solver; it is **not** a full incompressible Stokes solve. The cuDSS path is the validated flagship.

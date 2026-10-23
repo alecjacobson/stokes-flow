@@ -1,0 +1,23 @@
+{
+  "pruned_mumps_float64": {
+    "nnz": 9457226,
+    "initial_factor_s": 15.575522341765463,
+    "numeric_factor_s": [
+      12.2109903851524,
+      12.115853190422058,
+      12.102106589823961
+    ],
+    "solve_s": [
+      0.13346890918910503,
+      0.14462782349437475,
+      0.1566758956760168
+    ],
+    "velocity_relative": 1.2499014237362354e-15,
+    "pressure_relative": 3.9026663017932195e-15
+  },
+  "memory_limit_bytes": 17179869184,
+  "superlu_float32": {
+    "status": "not run: exceeds configured size cap",
+    "max_unknowns": 100000
+  }
+}
