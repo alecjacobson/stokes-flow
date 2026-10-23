@@ -1,0 +1,19 @@
+{
+  "float32_cudss_without_external_refinement": {
+    "unknowns": 271506,
+    "velocity_relative": 0.0002739376838889306,
+    "pressure_relative": 0.0002081227091908655,
+    "acceptance_limit": 0.00002,
+    "resolution": "Three device correction solves with float64 residual accumulation; thresholds unchanged",
+    "issue": 8
+  },
+  "float32_superlu_large_control": {
+    "unknowns": 271506,
+    "exit_code": 137,
+    "cgroup_memory_limit_bytes": 17179869184,
+    "observed_oom_kill_counter": 1,
+    "successful_timing": null,
+    "resolution": "Release old factors between repetitions; checkpoint controls; cap optional SuperLU at 100000 unknowns and evaluate it on the 51770-unknown case",
+    "issue": 9
+  }
+}
