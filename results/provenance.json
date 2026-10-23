@@ -1,5 +1,5 @@
 {
-  "source_commit": "aa7b106bb8c011c863c9b0ddf1a174c4df201360",
+  "source_commit": "7bf4c3249cdde9e8bee78d1519c88eaded641c6d",
   "hardware": {
     "cpu": "AMD EPYC 9B45; 4-core cgroup quota; 1 MPI rank; 4 OMP/BLAS threads",
     "gpu": "RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb"

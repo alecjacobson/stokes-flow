@@ -1,0 +1,68 @@
+{
+  "warp": "1.19.0rc1",
+  "cudss": "1.0.0.35",
+  "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb",
+  "cells": 59926,
+  "unknowns": 271506,
+  "nnz": 11248488,
+  "matrix_precision": "float32",
+  "geometry_precision": "float64 Jacobian; float32 basis gradients and quadrature",
+  "topology_setup_s": 2.1794887837022543,
+  "first_assembly_including_jit_s": 0.004532506689429283,
+  "analysis_s": 6.238594123162329,
+  "first_factor_s": 0.7854822454974055,
+  "first_solve_s": 0.6657326277345419,
+  "assembly_s": [
+    0.001802029088139534,
+    0.0017633391544222832,
+    0.0017570294439792633,
+    0.001756519079208374,
+    0.0017517786473035812,
+    0.0017572296783328056,
+    0.0017524193972349167
+  ],
+  "eager_pipeline_s": [
+    0.7964787287637591,
+    0.796019178815186,
+    0.7943641096353531,
+    0.7949789799749851,
+    0.7961035091429949,
+    0.7960101906210184,
+    0.7964869886636734
+  ],
+  "graph_pipeline_s": [
+    0.793885420076549,
+    0.7941999109461904,
+    0.7956884792074561,
+    0.7958351001143456,
+    0.795485258102417,
+    0.7952791899442673,
+    0.7956650098785758
+  ],
+  "reused_factor_solve_s": [
+    0.03364697936922312,
+    0.03361370041966438,
+    0.03355763014405966,
+    0.03358964901417494,
+    0.03359548933804035,
+    0.03359899017959833,
+    0.03358335979282856
+  ],
+  "assembly_relative_errors": {
+    "velocity": 6.567545294942422e-08,
+    "divergence": 1.056331274411585e-07,
+    "rhs": 3.9368895395331627e-10
+  },
+  "accuracy": {
+    "velocity_relative": 1.9480408296375237e-07,
+    "pressure_relative": 6.069931281110197e-07,
+    "residual_relative": 4.5637296853351795e-10
+  },
+  "changed_input_graph_accuracy": {
+    "velocity_relative": 2.0793484951344943e-07,
+    "pressure_relative": 3.821385881051858e-07,
+    "residual_relative": 5.988706402157899e-10
+  },
+  "graph_scope": "geometry + numerical matrix assembly + BC lifting + LU refactorization + solve",
+  "setup_scope": "mesh IO, sparse topology, transfers, JIT, symbolic analysis excluded from graph"
+}

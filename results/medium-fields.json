@@ -1,10 +1,10 @@
 {
-  "velocity_L2_relative": 1.2680169495677208e-07,
-  "pressure_L2_relative": 1.8611221666541e-07,
+  "velocity_L2_relative": 1.4017214091606777e-07,
+  "pressure_L2_relative": 2.018260866332795e-07,
   "gpu_flux_in": -2.981312809751552,
-  "gpu_flux_out": 2.981312799213393,
+  "gpu_flux_out": 2.981312851006866,
   "gpu_flux_wall": 0.0,
-  "gpu_flux_relative": 3.5347377019854723e-09,
+  "gpu_flux_relative": 1.3837968862868069e-08,
   "cpu_divergence_L2": 0.7426661427692688,
-  "gpu_divergence_L2": 0.7426661457807296
+  "gpu_divergence_L2": 0.7426660960709536
 }
