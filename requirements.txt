@@ -1,0 +1,7 @@
+--extra-index-url https://pypi.nvidia.com
+warp-lang==1.19.0rc1
+nvidia-cudss-cu12==1.0.0.35
+numpy==2.5.4
+scipy==1.18.1
+gmsh==4.15.2
+pytest==9.1.1
