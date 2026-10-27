@@ -11,6 +11,8 @@
   "frames": 160,
   "fps": 24,
   "advection_dt": 0.045,
+  "tracer_exits_reseeded": 312,
+  "outlet_handling": "Check midpoint and endpoint exits before interpolating outside the sampled grid",
   "cpu_speed_max": 1.9459607450294862,
   "gpu_speed_max": 1.9459612351263555
 }

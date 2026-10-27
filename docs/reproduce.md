@@ -41,7 +41,15 @@ Numerical regression tests run on the GPU host and fail if the independent small
 After producing the flagship reference and GPU solution:
 
 ```bash
-OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1 .cpu/bin/python scripts/visualize_flow.py
+PYTHONPATH=. OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1 .cpu/bin/python scripts/visualize_flow.py
 ```
 
 This evaluates the original P2 velocity and P1 pressure on the cylinder center-plane. CPU and GPU panels share color scales and streamline seeds. The animation advects markers through the two-dimensional projection of the sampled **steady** velocity, using bilinear resampling and midpoint integration. It depicts neither transient fluid dynamics nor full three-dimensional particle tracks. Tracers leaving the outlet are reseeded at the inlet. PNG, PDF, GIF, MP4 and sampling metadata are written to `results/visuals/`; MP4 requires FFmpeg in the CPU environment.
+
+For the spatial view of that same slice inside the cylinder:
+
+```bash
+.cpu/bin/python scripts/render_flow_scene.py
+```
+
+The first command caches the evaluated slice under `data/fine/visualization-slice.npz`. The 3D scene uses that field on the physical plane `y=0`, with a translucent ideal-cylinder outline for context and a camera approximately 27 degrees off the plane normal. The displayed coordinate order is `(z,y,x)` to keep the pipe horizontal. Tracer exits are detected at midpoint and endpoint stages before any out-of-grid sampling; exiting markers are reseeded at the inlet.

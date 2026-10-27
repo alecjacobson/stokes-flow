@@ -4,7 +4,7 @@
 
 ![Tracers through the steady GPU flow](results/visuals/flow-tracers.gif)
 
-[CPU/GPU velocity and pressure slices](results/visuals/flow-slices.png) · [Animation (MP4)](results/visuals/flow-tracers.mp4). Tracers move through the projected center-plane velocity field of the steady solution.
+[3D view of the slice](results/visuals/flow-scene-3d.png) · [CPU/GPU velocity and pressure slices](results/visuals/flow-slices.png) · [Animation (MP4)](results/visuals/flow-tracers.mp4). Tracers move through the projected center-plane velocity field of the steady solution.
 
 | Complete numerical pipeline | Median time |
 | --- | ---: |

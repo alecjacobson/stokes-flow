@@ -17,6 +17,8 @@ from matplotlib.colors import Normalize
 from mpi4py import MPI
 from scipy.interpolate import RegularGridInterpolator
 
+from stokes.tracers import midpoint_step
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--case", default="data/fine")
 parser.add_argument("--mesh", default="data/fine.msh")
@@ -62,6 +64,13 @@ for filename in ["x.npy", "gpu_x.npy"]:
     velocities.append(vel.reshape((*X.shape, 3)))
     pressures.append(pressure.reshape(X.shape))
 speeds = [np.linalg.norm(v, axis=-1) for v in velocities]
+np.savez_compressed(
+    case / "visualization-slice.npz",
+    z=z,
+    radial=radial,
+    velocity=velocities[1],
+    pressure=pressures[1],
+)
 velocity_slice_error = float(
     np.linalg.norm((velocities[1] - velocities[0])[valid.reshape(X.shape)])
     / np.linalg.norm(velocities[0][valid.reshape(X.shape)])
@@ -134,9 +143,7 @@ plt.close(fig)
 # Tracers follow the 2D projection (uz, ux) of the sampled steady P2 velocity.
 # This is explicitly a projected slice, not a transient fluid solve or full 3D paths.
 v = velocities[1]
-interp = RegularGridInterpolator(
-    (radial, z), np.nan_to_num(v[:, :, [0, 2]]), bounds_error=False, fill_value=0.0
-)
+interp = RegularGridInterpolator((radial, z), np.nan_to_num(v[:, :, [0, 2]]), bounds_error=True)
 rng = np.random.default_rng(20261027)
 count = 120
 pos = np.column_stack((rng.uniform(-0.88, 0.88, count), rng.uniform(0.01, 3.95, count)))
@@ -163,10 +170,10 @@ fig.supxlabel(
 )
 positions = []
 dt = 0.045
+exit_count = 0
 for frame in range(160):
-    mid = pos + 0.5 * dt * interp(pos)
-    pos = pos + dt * interp(mid)
-    gone = (pos[:, 1] > 3.97) | (pos[:, 1] < 0.001) | (np.abs(pos[:, 0]) > 0.98)
+    pos, gone = midpoint_step(pos, interp, dt, [radial[0], z[0]], [radial[-1], z[-1]])
+    exit_count += int(np.count_nonzero(gone))
     pos[gone, 0] = rng.uniform(-0.88, 0.88, np.count_nonzero(gone))
     pos[gone, 1] = 0.006
     positions.append(pos.copy())
@@ -202,6 +209,8 @@ metadata = {
     "frames": 160,
     "fps": 24,
     "advection_dt": dt,
+    "tracer_exits_reseeded": exit_count,
+    "outlet_handling": "Check midpoint and endpoint exits before interpolating outside the sampled grid",
     "cpu_speed_max": float(np.nanmax(speeds[0])),
     "gpu_speed_max": float(np.nanmax(speeds[1])),
 }
