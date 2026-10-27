@@ -2,6 +2,10 @@
 
 **7.7× faster** for a validated 271,506-unknown Taylor–Hood Stokes solve on 59,926 tetrahedra.
 
+![Tracers through the steady GPU flow](results/visuals/flow-tracers.gif)
+
+[CPU/GPU velocity and pressure slices](results/visuals/flow-slices.png) · [Animation (MP4)](results/visuals/flow-tracers.mp4). Tracers move through the projected center-plane velocity field of the steady solution.
+
 | Complete numerical pipeline | Median time |
 | --- | ---: |
 | DOLFINx + CPU MUMPS, 4 threads | 13.578 s |

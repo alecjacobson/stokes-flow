@@ -1,0 +1,16 @@
+{
+  "source_case": "data/fine",
+  "plane": "y=0",
+  "velocity_interpolation": "DOLFINx evaluation of original P2 elements",
+  "pressure_interpolation": "original P1 elements",
+  "sampled_points": 80601,
+  "inside_mesh_points": 80601,
+  "velocity_slice_relative_error": 1.7853304233653746e-07,
+  "pressure_slice_relative_error": 6.503784414244791e-07,
+  "animation": "Projected (ux,uz) steady velocity, bilinear resampling of slice, midpoint tracer integration; not a transient fluid solve or 3D particle tracking",
+  "frames": 160,
+  "fps": 24,
+  "advection_dt": 0.045,
+  "cpu_speed_max": 1.9459607450294862,
+  "gpu_speed_max": 1.9459612351263555
+}

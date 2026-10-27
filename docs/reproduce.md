@@ -35,3 +35,13 @@ PYTHONPATH=. .venv/bin/python -m pytest -q
 GPU script inputs are `mesh.npz`, `A.npz`, `b.npy` and `x.npy`. Only `mesh.npz` is used to construct the numerical simulation; the latter three files are loaded exclusively for independent validation. Mesh export currently uses one MPI rank. The generated cylinder has planar end caps and a piecewise-planar approximation of its circular wall; the elements and geometry are not replaced by a Cartesian or voxel discretization.
 
 Numerical regression tests run on the GPU host and fail if the independent small CPU reference is missing. Source checks are `python -m compileall -q scripts stokes tests`, `bash -n scripts/reproduce.sh`, and `uvx ruff check scripts stokes tests`. No hosted CI run is claimed: the publishing token does not have GitHub workflow scope.
+
+## Flow visualization
+
+After producing the flagship reference and GPU solution:
+
+```bash
+OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=1 .cpu/bin/python scripts/visualize_flow.py
+```
+
+This evaluates the original P2 velocity and P1 pressure on the cylinder center-plane. CPU and GPU panels share color scales and streamline seeds. The animation advects markers through the two-dimensional projection of the sampled **steady** velocity, using bilinear resampling and midpoint integration. It depicts neither transient fluid dynamics nor full three-dimensional particle tracks. Tracers leaving the outlet are reseeded at the inlet. PNG, PDF, GIF, MP4 and sampling metadata are written to `results/visuals/`; MP4 requires FFmpeg in the CPU environment.
