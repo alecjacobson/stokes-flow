@@ -1,0 +1,39 @@
+{
+  "deformation": "bend",
+  "inlet": "skew",
+  "dolfinx": "0.10.0",
+  "petsc": [
+    3,
+    25,
+    6
+  ],
+  "cells": 555,
+  "unknowns": 3382,
+  "velocity_unknowns": 3201,
+  "nnz": 268653,
+  "precision": "float64",
+  "initialization_s": 0.06480997102335095,
+  "assembly_s": [
+    0.012081798980943859
+  ],
+  "factor_s": 0.037369664991274476,
+  "solve_s": [
+    0.0014165189932100475
+  ],
+  "refactor_s": [
+    0.014230267028324306
+  ],
+  "pipeline_solve_s": [
+    0.0005875300266779959
+  ],
+  "pipeline_s": [
+    0.02690109598916024
+  ],
+  "residual_relative": 1.6232540658466426e-16,
+  "flux_in": -2.6149706009744214,
+  "flux_out": 2.6149706009744196,
+  "flux_wall": 0.0,
+  "flux_relative": 6.793027955030635e-16,
+  "threads": "4",
+  "cpu_quota": "400000 100000"
+}

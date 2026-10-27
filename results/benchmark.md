@@ -1,4 +1,6 @@
-# Measured results
+# Historical measured results
+
+These are the original measurements, retained for comparison. The [27 October performance audit](performance/README.md) contains the current 33.1× CPU comparison and matched measurements of the implementation improvement.
 
 All times are seconds unless marked otherwise. CPU medians use three samples; GPU medians use seven. Raw JSON files in this directory preserve every sample, version, accuracy check and setup component. The primary comparison is assembly + numerical factorization + solve on a fixed mesh.
 

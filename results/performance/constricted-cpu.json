@@ -1,0 +1,39 @@
+{
+  "deformation": "constrict",
+  "inlet": "plug",
+  "dolfinx": "0.10.0",
+  "petsc": [
+    3,
+    25,
+    6
+  ],
+  "cells": 10606,
+  "unknowns": 51770,
+  "velocity_unknowns": 49428,
+  "nnz": 4659786,
+  "precision": "float64",
+  "initialization_s": 0.4992318050353788,
+  "assembly_s": [
+    0.23269646504195407
+  ],
+  "factor_s": 0.9829944939701818,
+  "solve_s": [
+    0.016269647050648928
+  ],
+  "refactor_s": [
+    0.6107379189925268
+  ],
+  "pipeline_solve_s": [
+    0.015350897971075028
+  ],
+  "pipeline_s": [
+    0.8587909220368601
+  ],
+  "residual_relative": 1.3895916465722213e-16,
+  "flux_in": -2.981312809751552,
+  "flux_out": 2.981312809751551,
+  "flux_wall": 0.0,
+  "flux_relative": 2.979152059438344e-16,
+  "threads": "4",
+  "cpu_quota": "400000 100000"
+}

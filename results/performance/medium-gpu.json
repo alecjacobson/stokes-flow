@@ -1,0 +1,106 @@
+{
+  "warp": "1.19.0rc1",
+  "cudss": "1.0.0.35",
+  "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb",
+  "cells": 10606,
+  "unknowns": 51770,
+  "nnz": 1505450,
+  "solver": "symmetric",
+  "factor_statistics": {
+    "device_info": 0,
+    "factor_nnz": 23398345,
+    "perturbed_pivots": 0,
+    "factor_flops": 35102951855
+  },
+  "matrix_precision": "float32",
+  "geometry_precision": "float64 Jacobian; float32 basis gradients and quadrature",
+  "topology_setup_s": 0.37696257297648117,
+  "first_assembly_including_jit_s": 0.002022230008151382,
+  "analysis_s": 0.5736091939616017,
+  "first_factor_s": 0.03921660402556881,
+  "first_solve_s": 0.022485377034172416,
+  "assembly_s": [
+    0.00033534003887325525,
+    0.000255430000834167,
+    0.0002526789903640747,
+    0.0002532400540076196,
+    0.00025282998103648424,
+    0.0002525699674151838,
+    0.00025228998856619
+  ],
+  "eager_pipeline_s": [
+    0.03774458501720801,
+    0.03782733401749283,
+    0.03781746397726238,
+    0.03793086501536891,
+    0.03804226400097832,
+    0.03790882398607209,
+    0.03793311497429386
+  ],
+  "graph_pipeline_s": [
+    0.03794687398476526,
+    0.03780845401342958,
+    0.03788625495508313,
+    0.037899264018051326,
+    0.0378745140042156,
+    0.037738475017249584,
+    0.037864513986278325
+  ],
+  "reused_factor_solve_s": [
+    0.004181199008598924,
+    0.004156270006205887,
+    0.004135129041969776,
+    0.004161630000453442,
+    0.0041370190447196364,
+    0.004183899029158056,
+    0.004132219997700304
+  ],
+  "assembly_relative_errors": {
+    "velocity": 6.631498562738168e-08,
+    "divergence": 1.0422077678642267e-07,
+    "rhs": 1.2034871033918746e-09
+  },
+  "accuracy": {
+    "velocity_relative": 1.6830923381444187e-07,
+    "pressure_relative": 3.204848707616311e-07,
+    "residual_relative": 9.167755026386259e-10
+  },
+  "changed_input_graph_accuracy": {
+    "velocity_relative": 1.6918231355469597e-07,
+    "pressure_relative": 2.393223307114589e-07,
+    "residual_relative": 1.0628797060267185e-09
+  },
+  "timed_replay_velocity_pressure_errors": [
+    [
+      1.673139773307138e-07,
+      3.26587571658498e-07
+    ],
+    [
+      1.8153181380528412e-07,
+      2.535414480595178e-07
+    ],
+    [
+      1.6934001588311105e-07,
+      2.1062211965729121e-07
+    ],
+    [
+      1.6405472624866982e-07,
+      2.2071119757248288e-07
+    ],
+    [
+      1.8308987038099768e-07,
+      2.7937259478280856e-07
+    ],
+    [
+      1.7094432828664193e-07,
+      2.543510733494952e-07
+    ],
+    [
+      1.598205400955595e-07,
+      1.7383167883745477e-07
+    ]
+  ],
+  "graph_scope": "geometry + numerical matrix assembly + BC lifting + refactorization + three residual-correction solves",
+  "refinement": "float32 factors/corrections with float64 residual accumulation, all on GPU",
+  "setup_scope": "mesh IO, sparse topology, transfers, JIT, symbolic analysis excluded from graph"
+}

@@ -1,0 +1,10 @@
+{
+  "velocity_L2_relative": 2.1384051825957932e-07,
+  "pressure_L2_relative": 2.689270933773585e-07,
+  "gpu_flux_in": -2.981312809751552,
+  "gpu_flux_out": 2.981312849693116,
+  "gpu_flux_wall": 0.0,
+  "gpu_flux_relative": 1.339730728808104e-08,
+  "cpu_divergence_L2": 0.9263739473793228,
+  "gpu_divergence_L2": 0.9263737605333222
+}

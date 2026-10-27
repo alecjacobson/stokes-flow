@@ -1,0 +1,49 @@
+{
+  "source_commit": "72992e8c7b4aaba1abedbbdf07b054c3cbc0b806",
+  "date_utc": "2026-10-27",
+  "driver": "595.91.07",
+  "gpu": "RTX PRO 6000 Blackwell Server Edition MIG 1g.24gb; 46 SMs; GI 6",
+  "cpu": "AMD EPYC 9B45; 4-core cgroup quota; 1 MPI rank; OMP_NUM_THREADS=4; OPENBLAS_NUM_THREADS=4",
+  "host_memory_limit_bytes": 17179869184,
+  "gpu_benchmark_blas_threads": 1,
+  "tests": "17 passed in 3.69 s",
+  "baseline": "profile_solver.py without pruning, matrix_type=GENERAL, three passes and final residual; numerical behavior of a2d6cd9",
+  "inputs": {
+    "small": {
+      "mesh.npz": "05325b50655ed49623a49a9ac96cc8fc30da465864ccbfb905d74904382e7627",
+      "A.npz": "0b589a8ba015cc3e4533f175e0f4ea22d903fc880b01a9e1955f40abb600d127",
+      "b.npy": "5715db446cf2ee121738a930c5684481a2ec970f481ef8506335d7ead1f93c74",
+      "x.npy": "2d586c664a617347de289822197e7ad0ab80c731ee28f7543aebd147f85f0dce"
+    },
+    "medium": {
+      "mesh.npz": "2fb16d326fcaaac85d4648581b707af27d579956205e18b993339aab08e356a2",
+      "A.npz": "67e179b70c0453233dc04ff645ecfd7286d2c65456a4fe2e35fc1b90ab839940",
+      "b.npy": "d4d850fb876aa23f463d1a31168ba73ad13cfc1e47f523e473f32298241d22fd",
+      "x.npy": "af874a3b70a634a584fe6cf83ce864a47cf9adf341670f0ed016e47dfdd6bf1a"
+    },
+    "fine": {
+      "mesh.npz": "ab760400bddc0de508e50f055b62d76f6cab0f78e6e640a8bdae00ff33de9223",
+      "A.npz": "a48f8bfb94b2bcd2463ae3eb9851ab14b7c939be426e115dae2357460779ce0a",
+      "b.npy": "c18028b402195fc4ad6f29921f2d7dbbfbe761478e19aaadd9dbadec7c6c3aee",
+      "x.npy": "8acf59dd7287e501366cadf4386e3b4de32db79368c3f6f1d9f8a59e6c3d4ee2"
+    },
+    "fine-current": {
+      "mesh.npz": "ab760400bddc0de508e50f055b62d76f6cab0f78e6e640a8bdae00ff33de9223",
+      "A.npz": "a48f8bfb94b2bcd2463ae3eb9851ab14b7c939be426e115dae2357460779ce0a",
+      "b.npy": "c18028b402195fc4ad6f29921f2d7dbbfbe761478e19aaadd9dbadec7c6c3aee",
+      "x.npy": "fca225f0ec09abac1e7530f2099586420ccd910bd89cd5954724458210338047"
+    },
+    "bent": {
+      "mesh.npz": "ad6e7114cebd618980f7037c163b88a658ccf5284ed2185b6c7843efe9a59e0c",
+      "A.npz": "7c008b4786b391bba3dbe42b4c16f3d5a1af3bf622fc3ae05d0e6fccd64f3ad2",
+      "b.npy": "7c70c95f7f150c544671e9d9f5382ec2b7167c9070a0405598ac779e018e9bec",
+      "x.npy": "fc1d4cd1a5afc4f4a0979371c16d8c0042b17e7e0ca679c2a6bf89e4b10dbd7d"
+    },
+    "constricted": {
+      "mesh.npz": "da3e221c33ab131b701fca7150b7e5bef27328c65f97b3556241f2fb1bbb4167",
+      "A.npz": "061229e40a9243bb0369067d13b96d8115e5d0c8a5c318b25f47d05d5d17c274",
+      "b.npy": "3446fc55743ac60985d2a89588804a1580a150797957cd8caca037af9f582f98",
+      "x.npy": "67c4922c2f877ffdf629f2fc7dd24af0e2537f19179354d8b63884e0faf25400"
+    }
+  }
+}
