@@ -17,10 +17,14 @@ from dolfinx.io import gmsh as gmshio
 from mpi4py import MPI
 from petsc4py import PETSc
 
+from stokes.validation_geometry import deform
+
 p = argparse.ArgumentParser()
 p.add_argument("mesh")
 p.add_argument("--output", default="data/small")
 p.add_argument("--repeats", type=int, default=3)
+p.add_argument("--deform", choices=["none", "bend", "constrict"], default="none")
+p.add_argument("--inlet", choices=["plug", "skew"], default="plug")
 a = p.parse_args()
 assert MPI.COMM_WORLD.size == 1, "Export currently supports one MPI rank"
 out = Path(a.output)
@@ -28,6 +32,7 @@ out.mkdir(parents=True, exist_ok=True)
 t0 = time.perf_counter()
 m = gmshio.read_from_msh(a.mesh, MPI.COMM_WORLD, rank=0, gdim=3)
 d, tags = m.mesh, m.facet_tags
+d.geometry.x[:] = deform(d.geometry.x, a.deform)
 d.topology.create_connectivity(2, 3)
 V = fem.functionspace(d, ("Lagrange", 2, (3,)))
 Q = fem.functionspace(d, ("Lagrange", 1))
@@ -44,9 +49,16 @@ L = fem.form([ufl.inner(fem.Constant(d, np.zeros(3)), v) * ufl.dx, ufl.ZeroBaseF
 wall = fem.locate_dofs_topological(V, 2, tags.find(3))
 inlet = fem.locate_dofs_topological(V, 2, tags.find(1))
 inlet = np.setdiff1d(inlet, wall).astype(np.int32)  # wall wins at the inlet rim
+inflow = fem.Function(V)
+if a.inlet == "skew":
+    inflow.interpolate(lambda x: np.array([0.15 * (1 - x[1] ** 2), 0.1 * x[0], 1 + 0.3 * x[0]]))
+else:
+    inflow.interpolate(
+        lambda x: np.array([np.zeros_like(x[0]), np.zeros_like(x[0]), np.ones_like(x[0])])
+    )
 bcs = [
     fem.dirichletbc(np.zeros(3), wall, V),
-    fem.dirichletbc(np.array([0.0, 0.0, 1.0]), inlet, V),
+    fem.dirichletbc(inflow, inlet),
 ]
 # Explicit assemblers allow clean timing of numerical assembly, factor, and solve.
 A = fp.assemble_matrix(forms, bcs=bcs, kind="mpi")
@@ -125,9 +137,10 @@ grad = el.tabulate(1, qp)[1:, :, :, 0].transpose(1, 2, 0).copy()
 pressure = ep.tabulate(0, qp)[0, :, :, 0]
 bc = np.zeros(nu + Q.dofmap.index_map.size_global, dtype=np.int32)
 g = np.zeros(bc.size)
-for nodes, val in [(wall, 0.0), (inlet, 1.0)]:
+for nodes in [wall, inlet]:
     bc[(nodes[:, None] * 3 + np.arange(3)).ravel()] = 1
-    g[nodes * 3 + 2] = val
+inlet_components = (inlet[:, None] * 3 + np.arange(3)).ravel()
+g[inlet_components] = inflow.x.array[inlet_components]
 np.savez(
     out / "mesh.npz",
     points=d.geometry.x,
@@ -145,6 +158,8 @@ np.savez(
 )
 res = np.linalg.norm(csr @ x.array - b.array) / np.linalg.norm(b.array)
 report = dict(
+    deformation=a.deform,
+    inlet=a.inlet,
     dolfinx=dolfinx.__version__,
     petsc=PETSc.Sys.getVersion(),
     cells=len(d.geometry.dofmap),

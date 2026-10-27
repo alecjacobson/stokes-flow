@@ -17,10 +17,12 @@ a = p.parse_args()
 path = Path(a.case)
 m = gmshio.read_from_msh(a.mesh, MPI.COMM_WORLD, rank=0, gdim=3)
 d = m.mesh
+stored = np.load(path / "mesh.npz")
+assert np.array_equal(d.geometry.dofmap, stored["cells"])
+d.geometry.x[:] = stored["points"]
 d.topology.create_connectivity(2, 3)
 V = fem.functionspace(d, ("Lagrange", 2, (3,)))
 Q = fem.functionspace(d, ("Lagrange", 1))
-stored = np.load(path / "mesh.npz")
 assert np.array_equal(V.dofmap.list, stored["velocity_cells"])
 assert np.array_equal(Q.dofmap.list, stored["pressure_cells"])
 nu = int(stored["nu"])

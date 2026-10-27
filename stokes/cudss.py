@@ -42,6 +42,9 @@ FREE = ct.CFUNCTYPE(I, P, P, S, P)
 CUDA_R_32F = 0
 CUDA_R_32I = 10
 GENERAL = FULL = BASE_ZERO = COL_MAJOR = 0
+SYMMETRIC = LOWER = 1
+PIVOT_TYPE = 7
+PIVOT_DIAGONAL = 4
 ANALYSIS = 3
 FACTORIZATION = 4
 REFACTORIZATION = 8
@@ -58,7 +61,41 @@ class MemHandler(ct.Structure):
 
 
 class CuDSS:
-    def __init__(self, A, b, x):
+    @classmethod
+    def for_stokes(cls, A, b, x, *, method="symmetric"):
+        """Factor the symmetric indefinite Stokes operator, with a LU option.
+
+        Diagonal pivoting avoids cuDSS's synchronous Bunch-Kaufman solve path.
+        Three solve passes retain FP64-accumulated residual refinement. The
+        unused residual after the last correction is omitted. Callers must
+        validate convergence for their problem, as with the general LU path.
+        """
+        if method not in ("symmetric", "general"):
+            raise ValueError(f"Unknown Stokes factorization: {method}")
+        return cls(
+            A,
+            b,
+            x,
+            matrix_type=SYMMETRIC if method == "symmetric" else GENERAL,
+            config={PIVOT_TYPE: PIVOT_DIAGONAL} if method == "symmetric" else None,
+            skip_final_residual=True,
+        )
+
+    def __init__(
+        self,
+        A,
+        b,
+        x,
+        *,
+        matrix_type=GENERAL,
+        config=None,
+        correction_passes=3,
+        skip_final_residual=False,
+    ):
+        if correction_passes < 1:
+            raise ValueError("At least one solve pass is required")
+        self.correction_passes = correction_passes
+        self.skip_final_residual = skip_final_residual
         roots = [Path(p) for p in site.getsitepackages()]
         path = next(
             p / "nvidia/cu12/lib/libcudss.so.1"
@@ -84,6 +121,8 @@ class CuDSS:
             "cudssSetStream": [P, P],
             "cudssSetDeviceMemHandler": [P, ct.POINTER(MemHandler)],
             "cudssConfigSet": [P, I, P, S],
+            "cudssConfigGet": [P, I, P, S, ct.POINTER(S)],
+            "cudssDataGet": [P, P, I, P, S, ct.POINTER(S)],
             "cudssMatrixCreateCsr": [
                 ct.POINTER(P),
                 I64,
@@ -120,7 +159,10 @@ class CuDSS:
         self.call("cudssSetStream", self.handle, P(wp.get_stream(A.device).cuda_stream))
         self.call("cudssSetDeviceMemHandler", self.handle, ct.byref(self.mem))
         self.call("cudssConfigCreate", ct.byref(self.config))
-        # GENERAL LU avoids an SPD assumption and synchronous Bunch-Kaufman solves.
+        for key, value in (config or {}).items():
+            typed = ct.c_double(value) if isinstance(value, float) else I(value)
+            self.call("cudssConfigSet", self.config, int(key), ct.byref(typed), ct.sizeof(typed))
+        # Neither GENERAL LU nor SYMMETRIC LDL^T assumes positive definiteness.
         self.call("cudssDataCreate", self.handle, ct.byref(self.data))
         self.call(
             "cudssMatrixCreateCsr",
@@ -135,8 +177,8 @@ class CuDSS:
             CUDA_R_32I,
             CUDA_R_32I,
             CUDA_R_32F,
-            GENERAL,
-            FULL,
+            matrix_type,
+            FULL if matrix_type == GENERAL else LOWER,
             BASE_ZERO,
         )
         self.call(
@@ -177,6 +219,30 @@ class CuDSS:
             self.rhs,
         )
 
+    def statistics(self):
+        """Synchronized diagnostic query; never called from the numerical graph."""
+        wp.synchronize()
+        result = {}
+        for name, key, dtype in [
+            ("device_info", 0, I),
+            ("factor_nnz", 1, I64),
+            ("perturbed_pivots", 2, I),
+            ("factor_flops", 26, I64),
+        ]:
+            value = dtype()
+            written = S()
+            self.call(
+                "cudssDataGet",
+                self.handle,
+                self.data,
+                key,
+                ct.byref(value),
+                ct.sizeof(value),
+                ct.byref(written),
+            )
+            result[name] = value.value
+        return result
+
     def analyze(self):
         self.execute(ANALYSIS)
 
@@ -190,16 +256,17 @@ class CuDSS:
         A, b, x = self.arrays
         x.zero_()
         wp.copy(self.residual, b)
-        # Fixed three correction passes, with no host convergence checks.
-        for _ in range(3):
+        # Fixed correction passes, with no host convergence checks.
+        for step in range(self.correction_passes):
             self.execute(SOLVE)
             wp.launch(add_correction, x.size, [x, self.correction], device=x.device)
-            wp.launch(
-                residual,
-                x.size,
-                [A.offsets, A.columns, A.values, b, x, self.residual],
-                device=x.device,
-            )
+            if step + 1 < self.correction_passes or not self.skip_final_residual:
+                wp.launch(
+                    residual,
+                    x.size,
+                    [A.offsets, A.columns, A.values, b, x, self.residual],
+                    device=x.device,
+                )
 
     def close(self):
         wp.synchronize()

@@ -15,6 +15,7 @@ from stokes.cudss import CuDSS
 p = argparse.ArgumentParser()
 p.add_argument("case")
 p.add_argument("--repeats", type=int, default=7)
+p.add_argument("--solver", choices=["symmetric", "general"], default="symmetric")
 a = p.parse_args()
 path = Path(a.case)
 wp.init()
@@ -47,7 +48,7 @@ blocks = {
 errors = {name: float(sp.linalg.norm(w - r) / sp.linalg.norm(r)) for name, (w, r) in blocks.items()}
 errors["rhs"] = float(np.linalg.norm(asm.b.numpy() - b) / np.linalg.norm(b))
 assert max(errors.values()) < 3e-6, errors
-s = CuDSS(asm.A, asm.b, asm.x)
+s = CuDSS.for_stokes(asm.A, asm.b, asm.x, method=a.solver)
 analysis = timed(s.analyze)
 factor = timed(s.factor)
 solve = timed(s.solve)
@@ -73,7 +74,7 @@ def pipeline():
     s.solve()
 
 
-# Warm everything before capture. Capture includes numerical assembly and LU.
+# Warm everything before capture. Capture includes assembly and refactorization.
 pipeline()
 wp.synchronize()
 with wp.ScopedCapture() as cap:
@@ -115,6 +116,8 @@ report = dict(
     cells=asm.nc,
     unknowns=asm.n,
     nnz=asm.A.nnz,
+    solver=a.solver,
+    factor_statistics=s.statistics(),
     matrix_precision="float32",
     geometry_precision="float64 Jacobian; float32 basis gradients and quadrature",
     topology_setup_s=topology_s,
@@ -130,8 +133,8 @@ report = dict(
     accuracy=accuracy,
     changed_input_graph_accuracy=changed,
     timed_replay_velocity_pressure_errors=replay_errors,
-    graph_scope="geometry + numerical matrix assembly + BC lifting + LU refactorization + three residual-correction solves",
-    refinement="float32 LU/corrections with float64 residual accumulation, all on GPU",
+    graph_scope="geometry + numerical matrix assembly + BC lifting + refactorization + three residual-correction solves",
+    refinement="float32 factors/corrections with float64 residual accumulation, all on GPU",
     setup_scope="mesh IO, sparse topology, transfers, JIT, symbolic analysis excluded from graph",
 )
 (path / "gpu.json").write_text(json.dumps(report, indent=2) + "\n")

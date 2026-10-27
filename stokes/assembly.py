@@ -126,7 +126,7 @@ def boundary(
 
 
 class Assembly:
-    def __init__(self, mesh, device="cuda:0"):
+    def __init__(self, mesh, device="cuda:0", *, prune_constraints=True):
         self.device = device
         self.n = len(mesh["bc"])
         self.nu = int(mesh["nu"])
@@ -141,6 +141,11 @@ class Assembly:
         )
         rows = np.concatenate([r0.ravel(), rp.ravel(), cu.ravel(), np.arange(self.n)])
         cols = np.concatenate([c0.ravel(), cu.ravel(), rp.ravel(), np.arange(self.n)])
+        if prune_constraints:
+            # These entries are identically zero after Dirichlet elimination for
+            # every geometry and boundary value. Never prune numerical near-zeros.
+            keep = ((mesh["bc"][rows] == 0) & (mesh["bc"][cols] == 0)) | (rows == cols)
+            rows, cols = rows[keep], cols[keep]
         pattern = sp.coo_matrix(
             (np.ones(len(rows), dtype=np.float32), (rows, cols)), shape=(self.n, self.n)
         ).tocsr()
@@ -152,8 +157,14 @@ class Assembly:
         )
 
         def slots(r, c):
+            target = r.astype(np.int64) * self.n + c
+            indices = np.searchsorted(keys, target)
+            if prune_constraints:
+                inactive = (mesh["bc"][r] != 0) | (mesh["bc"][c] != 0)
+                # Identity diagonal is set by boundary(), not element assembly.
+                indices = np.where(inactive & (r != c), -1, indices)
             return wp.array(
-                np.searchsorted(keys, r.astype(np.int64) * self.n + c).astype(np.int32),
+                indices.astype(np.int32),
                 device=device,
             )
 
